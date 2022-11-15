@@ -34,15 +34,18 @@ class InjectorDLL (object):
     __instance = None
 
     @classmethod
-    def get_instance (cls):
+    def get_instance(cls):
         if cls.__instance is None:
             if platform.system () != 'Windows':
-                raise Exception ("For now only Windows is supported, detected platform is %s" % platform.system ())
+                raise Exception(
+                    f"For now only Windows is supported, detected platform is {platform.system()}"
+                )
+
             cls.__instance = cls ()
         return cls.__instance
 
-    def __init__ (self):
-        if struct.calcsize ("P") * 8 == 64:
+    def __init__(self):
+        if struct.calcsize("P") == 8:
             self.lib = ctypes.cdll.LoadLibrary (pkg_resources.resource_filename (__name__, os.path.join ('lib', 'DLLInjection64.dll')))
         else:
             self.lib = ctypes.cdll.LoadLibrary (pkg_resources.resource_filename (__name__, os.path.join ('lib', 'DLLInjection32.dll')))
@@ -136,8 +139,8 @@ def send_message (message):
     if res != CustomExitCodes.STATUS_OK.value:
         raise InjectionError ('failed to send message', res)
 
-def write_app_id (file_path, app_id):
-    logging.info ('writing %s to %s' % (str (app_id), file_path))
+def write_app_id(file_path, app_id):
+    logging.info(f'writing {str(app_id)} to {file_path}')
     with open (file_path, 'w') as f:
         f.write (str(app_id))
 
